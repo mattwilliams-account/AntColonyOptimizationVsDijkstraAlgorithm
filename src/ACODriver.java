@@ -9,7 +9,7 @@ public class ACODriver {
     private int alpha = 1; //influence pheromones contributes toward ant behavior (larger = more exploitation for smallest global path)
     private int beta = 5; //influence distance contributes toward ant behavior (larger = more exploitation for closest city)
     private double evaporation = 0.5;
-    private double Q = 100; //pheromone contribution amount
+    private double Q = 100; //pheromone contribution scale
     private List<City> cities;
     private double[][] pheromones;
 
@@ -29,6 +29,9 @@ public class ACODriver {
         }
     }
 
+    /**
+     * main logic used by algorithm to determine best path
+     */
     public void solve() {
         Random rand = new Random();
         Ant best = null;
@@ -53,13 +56,18 @@ public class ACODriver {
             }
             evaporatePheromones();
             for (Ant ant : ants) {
-                depostiPheromones(ant);
+                depositPheromones(ant);
             }
 
             System.out.println("Iteration " + i + ": Best Length = " + best.length);
         }
     }
 
+    /**
+     * function to select the next city to travel to
+     * @param ant : ant that is making the decision
+     * @return : city that ant should visit next
+     */
     private City selectNextCity(Ant ant) {
         City current = ant.path.get(ant.path.size() - 1); // finds location of ant
         double sum = 0;
@@ -82,6 +90,9 @@ public class ACODriver {
         return probabilities.keySet().iterator().next(); //if the pick fails returns first city in list
     }
 
+    /**
+     * evaporates pheromones by evaporation rate over entire map
+     */
     private void evaporatePheromones() {
         for (int i = 0; i < cities.size(); i++) {
             for (int j = 0; j < cities.size(); j++) {
@@ -90,8 +101,12 @@ public class ACODriver {
         }
     }
 
-    private void depostiPheromones(Ant ant) {
-        double contribution = Q / ant.length;
+    /**
+     * determines contribution amount and deposits pheromones at city
+     * @param ant : ant making deposit
+     */
+    private void depositPheromones(Ant ant) {
+        double contribution = Q / ant.length; //solutions with shorter paths leave higher amounts of pheromones
         for (int i = 0; i < ant.path.size() - 1; i++) {
             int from = cities.indexOf(ant.path.get(i));
             int to = cities.indexOf(ant.path.get(i + 1));
