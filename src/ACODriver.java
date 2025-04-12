@@ -65,21 +65,21 @@ public class ACODriver {
         double sum = 0;
         Map<City, Double> probabilities = new HashMap<>();
 
-        for (City city : ant.notInfected) {
-            double pheromone = pheromones[cities.indexOf(current)][cities.indexOf(city)];
-            double distance = current.distanceTo(city);
-            double value = Math.pow(pheromone, alpha) * Math.pow(1.0 / distance, beta);
-            probabilities.put(city, value);
+        for (City city : ant.notInfected) { //iterate to determine likeliness of ant choosing city based on parameters
+            double pheromone = pheromones[cities.indexOf(current)][cities.indexOf(city)]; //pheromone at current city
+            double distance = current.distanceTo(city); //distance from current city to other
+            double value = Math.pow(pheromone, alpha) * Math.pow(1.0 / distance, beta); // probability value giving houses with higher pheromone levels and less distance higher chance of selection
+            probabilities.put(city, value); //relates cities with their probability value of being chosen
             sum += value;
         }
 
-        double pick = Math.random() * sum;
+        double pick = Math.random() * sum; //random number between 0 and total weight
         double total = 0;
-        for (Map.Entry<City, Double> entry : probabilities.entrySet()) {
+        for (Map.Entry<City, Double> entry : probabilities.entrySet()) { //iterate through every city and sum their probability values
             total += entry.getValue();
-            if (total >= pick) return entry.getKey();
+            if (total >= pick) return entry.getKey(); 
         }
-        return probabilities.keySet().iterator().next();
+        return probabilities.keySet().iterator().next(); //if the pick fails returns first city in list
     }
 
     private void evaporatePheromones() {
