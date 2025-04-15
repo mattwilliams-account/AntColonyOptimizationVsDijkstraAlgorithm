@@ -59,9 +59,9 @@ public class Main {
             System.out.println("Dijkstra Algorithm Results: ");
             for (int i = 0; i < numIterations; i++) {
                 timerStart = System.currentTimeMillis(); //start timer dijkstra's
-                List<City> shortestPath = DijkstraDriver.result(cities,start,end);
+                DijkstraResult dijkstraResults = DijkstraDriver.result(cities,start,end); //results are stored with path, distance table, and total distance
                 timerEnd = System.currentTimeMillis(); //end timer dijkstra's
-                double length = Math.sqrt((end.x - start.x) + (end.y - start.y));
+                double length = dijkstraResults.getTotalDistance();
                 System.out.println("[Dijkstra Algorithm] iteration: "+i + " Shortest path length: " +length);
                 results.add((long) length);
                 times.add( timerEnd - timerStart );

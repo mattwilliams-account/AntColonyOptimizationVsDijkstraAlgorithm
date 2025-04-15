@@ -5,77 +5,48 @@ import java.util.*;
  */
 public class DijkstraDriver {
 
-    public static Map<City, Double> dijkstra(List<City> cities, City start, City end) {
-        Map<City, Double> distances = new HashMap<>();
+    public static DijkstraResult result(List<City> cities, City start, City end) {
+        Map <City, Double> distances = new HashMap<>();
         Map<City, City> previous = new HashMap<>();
         Set<City> infected = new HashSet<>();
-        PriorityQueue<CityDistance> pq = new PriorityQueue<>(Comparator.comparingDouble(cd -> cd.distance)); // adds cities to queue based on their distance putting shortest at the front
+        PriorityQueue<CityDistance> pq = new PriorityQueue<>(Comparator.comparing(cd -> cd.distance)); //add cities with the smallest distance to front of queue
 
         for (City city : cities) {
-            distances.put(city, Double.POSITIVE_INFINITY); //stores initial distance value of each city to infinity
+            distances.put(city, Double.POSITIVE_INFINITY); //initialize distance to other cities as infinity
         }
         distances.put(start, 0.0);
-        pq.add(new CityDistance(start, 0.0));
-        while (!pq.isEmpty()) {
-            CityDistance current = pq.poll();
-            City currentCity = current.city;
-            if (infected.contains(currentCity)) continue; //if city is already infected then skip that iteration
-            infected.add(currentCity);
-            if (currentCity == end) break;
-            for (City next : cities) {
-                if (next == currentCity || infected.contains(next)) continue; // if the next city being viewed is the current city or already infected skip iteration
-                double totDistance = distances.get(currentCity) + currentCity.distanceTo(next) ; //gets total distance between current and next city being targeted
-                if (totDistance < distances.get(next)){ // if total distance of current city being targeted is less than previous target add as new shortest path
-                    distances.put(next, totDistance);
-                    previous.put(next, currentCity);
-                    pq.add(new CityDistance(next, totDistance));
-                }
-            }
-        }
-        return distances;
-    }
-
-    /**
-     * Driver handles usability for Dijkstra's algorithm
-     * @param cities : topography of cities
-     * @param start : starting city
-     * @param end : target city trying to be reached
-     * @return : list of cities in order of shortest distance from start to finish
-     */
-    public static List<City> result(List<City> cities, City start, City end){
-        Map<City, Double> distances = new HashMap<>();
-        Map<City, City> previous = new HashMap<>();
-        Set<City> infected = new HashSet<>();
-        PriorityQueue<CityDistance> pq = new PriorityQueue<>(Comparator.comparingDouble(d -> d.distance)); //puts city with the shortest distance at front of queue
-
-        for (City city : cities) {
-            distances.put(city, Double.POSITIVE_INFINITY); //initial distance of unknown cities to infinity
-        }
-        distances.put(start, 0.0);
-        pq.add(new CityDistance(start, 0.0));
+        pq.add(new CityDistance(start, 0));
 
         while (!pq.isEmpty()) {
             CityDistance current = pq.poll();
             City currentCity = current.city;
-            if (infected.contains(currentCity)) continue; //ignore if already infected
-            infected.add(currentCity); //infect if not infected
-            if (currentCity == end) break;
-            for (City next : cities) {
-                if (next == currentCity || infected.contains(next)) continue; //if target is current or infected skip
-                double totDistance = distances.get(currentCity) + currentCity.distanceTo(next);
-                if (totDistance < distances.get(next)){
-                    distances.put(next, totDistance);
-                    previous.put(next, currentCity);
-                    pq.add(new CityDistance(next, totDistance));
+            if (infected.contains(current.city)) continue; //ignore iteration if city is infected
+            infected.add(current.city); // infect city if not infected
+            if (currentCity.equals(end)) break; //terminate if current city is the end
+            for (City target: cities){
+                if (target.equals(currentCity) || infected.contains(target)) continue; //skip iteration if target is current or infected
+                double TotDistance = distances.get(currentCity) + currentCity.distanceTo(target);
+                if (TotDistance < distances.get(target)) { // if path is shorter update
+                    distances.put(target, TotDistance);
+                    previous.put(target, currentCity);
+                    pq.add(new CityDistance(target, TotDistance));
                 }
             }
         }
         List<City> shortestPath = new ArrayList<>();
-        for (City current = end; end != null; current = previous.get(current)) { //iterates shortest path from end to beginning
-            shortestPath.add(current);
+        if (!previous.containsKey(end) && !end.equals(start)) {
+            return new DijkstraResult(shortestPath, distances, Double.POSITIVE_INFINITY); //returns infinite distance if unreachable
         }
-        Collections.reverse(shortestPath);
-        return shortestPath;
+        if (end.equals(start)) {
+            shortestPath.add(start);
+            return new DijkstraResult(shortestPath, distances, 0.0); //returns 0 distance if end is start
+        }
+        for (City current = end; current != null; current = previous.get(current)) {
+            shortestPath.add(current);
+            if (current.equals(start)) break; //terminate when start is reached
+        }
+        Collections.reverse(shortestPath); //puts list in start to finish order
+        return new DijkstraResult(shortestPath, distances, distances.get(end));
     }
 
 }
