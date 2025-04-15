@@ -9,7 +9,7 @@ import java.util.Set;
 public class Ant {
     public List<City> path = new ArrayList<>(); //path that virus follows
     public Set<City> notInfected = new HashSet<>(); //set of cities not infected
-    public double length = 0; //distance virus has travelled
+    public long length = 0; //distance virus has travelled
 
     /**
      * constructor for Ant

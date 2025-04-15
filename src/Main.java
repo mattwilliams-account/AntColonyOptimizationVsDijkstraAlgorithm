@@ -17,19 +17,19 @@ public class Main {
         List<City> cities = new ArrayList<>();
         System.out.println("Enter the number of Cities (0 or negative for default): ");
         numCities = in.nextInt();
-        if (numCities >= 0) numCities = 10;
+        if (numCities <= 0) numCities = 10;
         for (int i = 0; i < numCities; i++) {
-            cities.add(new City(rand.nextInt(0, 15), rand.nextInt(0, 15)));
+            cities.add(new City(rand.nextInt(0, 10000), rand.nextInt(0, 10000)));
         }
-        if (choice == 'A') {
+        if (choice == 'A' || choice == 'a') {
             int numAnts;
             int numIterations;
             System.out.println("Enter number of ants (0 or negative for default): ");
             numAnts = in.nextInt();
-            if (numAnts >= 0) numAnts = 10;
+            if (numAnts <= 0) numAnts = 10;
             System.out.println("Enter number of iterations (0 or negative for default): ");
             numIterations = in.nextInt();
-            if (numIterations >= 0) numIterations = 100;
+            if (numIterations <= 0) numIterations = 100;
             ACODriver aco = new ACODriver(cities, numAnts, numIterations );
             System.out.println("Ant Colony Optimization Results: ");
             List<Long> acoResults = aco.solve();
@@ -43,10 +43,11 @@ public class Main {
             }
             long acoAvgLength = average(acoLengths);
             long acoAvgTime = average(acoTimes);
-            System.out.println("Average length: " +acoAvgLength);
-            System.out.println("Average time: " +acoAvgTime);
+            System.out.println(acoLengths);
+            System.out.println("Average best length: " +acoAvgLength);
+            System.out.println("Average time per iteration (milli seconds): " +acoAvgTime);
 
-        } else if (choice == 'D') {
+        } else if (choice == 'D' || choice == 'd') {
             City start = cities.get(0); //assigns first city to first city in given list
             City end = cities.get(rand.nextInt(1,cities.size())); //assigns end city to random city that is not the start
             int numIterations;
@@ -67,12 +68,13 @@ public class Main {
             }
             long avgDijkstraResults = average(results);
             long avgDijkstraTime = average(times);
+
             System.out.println("Average length: " +avgDijkstraResults );
-            System.out.println("Average time: " +avgDijkstraTime);
+            System.out.println("Average time (milli seconds): " +avgDijkstraTime);
             // lengths per iteration are stored in results
             // times per iteration are stored in times
         }
-        else System.out.println("Please choose either 'A' or 'D': "); choice =in.next().charAt(0);
+        else System.out.println("[ERROR] Please choose either 'A' or 'D': "); choice =in.next().charAt(0);
     }
 
     /**
