@@ -1,7 +1,7 @@
 import java.util.*;
 
 /**
- *driver for ant colony optimization
+ *driver handles logic for ant colony optimization
  */
 public class ACODriver {
     private int numAnts;
