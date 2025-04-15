@@ -32,11 +32,14 @@ public class ACODriver {
     /**
      * main logic used by algorithm to determine best path
      */
-    public void solve() {
+    public List<Long> solve() {
         Random rand = new Random();
         Ant best = null;
-
+        List<Long> results = new ArrayList<>();
+        long startTime;
+        long endTime;
         for (int i = 0; i < numIterations; i++) {
+            startTime = System.currentTimeMillis();
             List<Ant> ants = new ArrayList<>();
 
             for (int j = 0; j < numAnts; j++) { //iterates for every ant
@@ -58,9 +61,12 @@ public class ACODriver {
             for (Ant ant : ants) {
                 depositPheromones(ant);
             }
-
-            System.out.println("Iteration " + i + ": Best Length = " + best.length);
+            endTime = System.currentTimeMillis();
+            results.add(endTime - startTime); //results store time for each iteration in even indexes
+            results.add((long) best.length); // results store length for each iteration in odd indexes
+            System.out.println("[ACO] Iteration " + i + ": Best Length = " + best.length);
         }
+        return results;
     }
 
     /**
@@ -77,7 +83,7 @@ public class ACODriver {
             double pheromone = pheromones[cities.indexOf(current)][cities.indexOf(city)]; //pheromone at current city
             double distance = current.distanceTo(city); //distance from current city to other
             double value = Math.pow(pheromone, alpha) * Math.pow(1.0 / distance, beta); // probability value giving houses with higher pheromone levels and less distance higher chance of selection
-            probabilities.put(city, value); //relates cities with their probability value of being chosen
+            probabilities.put(city, Double.valueOf(value)); //relates cities with their probability value of being chosen
             sum += value;
         }
 
