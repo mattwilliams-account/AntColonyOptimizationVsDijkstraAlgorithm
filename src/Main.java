@@ -72,6 +72,7 @@ public class Main {
             // lengths per iteration are stored in results
             // times per iteration are stored in times
         }
+        else System.out.println("Please choose either 'A' or 'D': "); choice =in.next().charAt(0);
     }
 
     /**
