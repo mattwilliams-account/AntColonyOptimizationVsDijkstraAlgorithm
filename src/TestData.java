@@ -5,6 +5,7 @@ public class TestData {
     public static void main(String[] args) throws IOException {
         final int numAnts = Integer.parseInt(args[0]);
         final int numIterations = Integer.parseInt(args[1]);
+        List<City> totalCities = new ArrayList<>();
         boolean dijkstra = false;
         if (args.length == 3) {
             dijkstra = args[2] != null && args[2].equals("-d");
@@ -22,29 +23,38 @@ public class TestData {
             BufferedReader acoInput = new BufferedReader(new FileReader("Cities.csv"));
 
             String line;
+            int lineCount = 0;
             while ((line = acoInput.readLine()) != null) {
+                String[] tokens = line.split(",");
+                totalCities.add(new City(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1])));
+                lineCount++;
+            }
+
+            for (int i = 1; i < lineCount; i++) {
                 List<City> cities = new ArrayList<>();
-                for (int j = 0; j < 10000; j++) {
-                    cities.add(new City(rand.nextInt(0, 10000), rand.nextInt(0, 10000)));
+
+                for (int j = 0; j < i; j++) {
+                    cities.add(totalCities.get(j));
                 }
+
                 ACODriver driver = new ACODriver(cities, numAnts, numIterations);
                 List<Long> results = driver.solve();
 
-                acoOutput.append(String.valueOf(1)).append(",");
+                acoOutput.append(String.valueOf(i)).append(",");
 
                 Long bestAnt = Long.MAX_VALUE;
                 int bestAntIndex = -1;
                 Long bestAntTime = null;
 
                 for (int j = 0; j < results.size(); j++) {
-                    Long getJ = results.get(j);
+                    Long getI = results.get(j);
                     if (j % 2 == 1) {
-                        if (getJ < bestAnt) {
-                            bestAnt = getJ;
+                        if (getI < bestAnt) {
+                            bestAnt = getI;
                             bestAntIndex = (j - 1) / 2;
                         }
                     } else {
-                        bestAntTime = getJ;
+                        bestAntTime = getI;
                     }
                 }
 
