@@ -1,16 +1,13 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class TestData {
     public static void main(String[] args) throws IOException {
-        final int numCities = Integer.parseInt(args[0]);
-        final int numAnts = Integer.parseInt(args[1]);
-        final int numIterations = Integer.parseInt(args[2]);
+        final int numAnts = Integer.parseInt(args[0]);
+        final int numIterations = Integer.parseInt(args[1]);
         boolean dijkstra = false;
-        if (args.length == 4) {
-            dijkstra = args[3] != null && args[3].equals("-d");
+        if (args.length == 3) {
+            dijkstra = args[2] != null && args[2].equals("-d");
         }
         Random rand = new Random();
 
@@ -22,15 +19,18 @@ public class TestData {
             acoOutput.write("NumCities,NumAnts,NumIterations,TimeMs\r\n");
             acoOutput.flush();
 
-            for (int i = 2; i < numCities + 1; i++) {
+            BufferedReader acoInput = new BufferedReader(new FileReader("Cities.csv"));
+
+            String line;
+            while ((line = acoInput.readLine()) != null) {
                 List<City> cities = new ArrayList<>();
-                for (int j = 0; j < i; j++) {
+                for (int j = 0; j < 10000; j++) {
                     cities.add(new City(rand.nextInt(0, 10000), rand.nextInt(0, 10000)));
                 }
                 ACODriver driver = new ACODriver(cities, numAnts, numIterations);
                 List<Long> results = driver.solve();
 
-                acoOutput.append(String.valueOf(i)).append(",");
+                acoOutput.append(String.valueOf(1)).append(",");
 
                 Long bestAnt = Long.MAX_VALUE;
                 int bestAntIndex = -1;
@@ -63,7 +63,7 @@ public class TestData {
             dijOutput.write("NumCities,TotalDistance,TimeMs\r\n");
             dijOutput.flush();
 
-            for (int i = 2; i < numCities + 1; i++) {
+            for (int i = 2; i < 10000 + 1; i++) {
                 List<City> cities = new ArrayList<>();
                 for (int j = 0; j < i; j++) {
                     cities.add(new City(rand.nextInt(0, 10000), rand.nextInt(0, 10000)));
