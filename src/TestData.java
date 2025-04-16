@@ -22,7 +22,7 @@ public class TestData {
             acoOutput.write("NumCities,NumAnts,NumIterations,TimeMs\r\n");
             acoOutput.flush();
 
-            for (int i = 1; i < numCities + 1; i++) {
+            for (int i = 2; i < numCities + 1; i++) {
                 List<City> cities = new ArrayList<>();
                 for (int j = 0; j < i; j++) {
                     cities.add(new City(rand.nextInt(0, 10000), rand.nextInt(0, 10000)));
@@ -59,15 +59,15 @@ public class TestData {
 
             // Dijkstra's Algorithm
 
-            for (int i = 1; i < numCities; i++) {
+            BufferedWriter dijOutput = new BufferedWriter(new FileWriter("DijOutput.csv"));
+            dijOutput.write("NumCities,TotalDistance,TimeMs\r\n");
+            dijOutput.flush();
+
+            for (int i = 2; i < numCities + 1; i++) {
                 List<City> cities = new ArrayList<>();
                 for (int j = 0; j < i; j++) {
                     cities.add(new City(rand.nextInt(0, 10000), rand.nextInt(0, 10000)));
                 }
-
-                BufferedWriter dijOutput = new BufferedWriter(new FileWriter("DijOutput.csv"));
-                dijOutput.write("NumCities,TimeMs\r\n");
-                dijOutput.flush();
 
                 City start = cities.getFirst();
                 City end = cities.get(rand.nextInt(1, cities.size()));
@@ -75,14 +75,23 @@ public class TestData {
                 long startTime;
                 long endTime;
 
+                double totalDistance = -1;
+                long timeMs = -1;
+
+                dijOutput.append(String.valueOf(i)).append(",");
+
                 for (int j = 0; j < numIterations; j++) {
                     startTime = System.currentTimeMillis();
                     DijkstraResult dijkstraResults = DijkstraDriver.result(cities, start, end);
                     endTime = System.currentTimeMillis();
-                    dijOutput.append(Double.toString(dijkstraResults.getTotalDistance())).append(",");
-                    dijOutput.append(Long.toString(endTime - startTime)).append("\r\n");
+                    totalDistance = Math.round(dijkstraResults.getTotalDistance());
+                    timeMs = endTime - startTime;
                 }
+
+                dijOutput.append(Double.toString(totalDistance)).append(",");
+                dijOutput.append(Long.toString(timeMs)).append("\r\n");
             }
+            dijOutput.close();
         }
     }
 }
