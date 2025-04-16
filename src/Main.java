@@ -1,3 +1,5 @@
+import java.time.Clock;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -5,7 +7,7 @@ import java.util.Scanner;
 
 
 public class Main {
-    private static Scanner in =new Scanner(System.in);
+    private static Scanner in = new Scanner(System.in);
     private static long timerStart;
     private static long timerEnd;
     public static void main(String[] args) {
@@ -57,6 +59,7 @@ public class Main {
             List<Long> results = new ArrayList<>();
             List<Long> times = new ArrayList<>();
             System.out.println("Dijkstra Algorithm Results: ");
+
             for (int i = 0; i < numIterations; i++) {
                 timerStart = System.currentTimeMillis(); //start timer dijkstra's
                 DijkstraResult dijkstraResults = DijkstraDriver.result(cities,start,end); //results are stored with path, distance table, and total distance
