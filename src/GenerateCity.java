@@ -10,7 +10,7 @@ public class GenerateCity {
 
         Random rand = new Random();
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter("cities.csv"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("Cities.csv"));
 
         for (int i = 0; i < numCities; i++) {
             writer.append(Integer.toString(rand.nextInt(0, citySize))).append(",");

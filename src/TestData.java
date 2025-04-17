@@ -30,7 +30,7 @@ public class TestData {
                 lineCount++;
             }
 
-            for (int i = 1; i < lineCount; i++) {
+            for (int i = 2; i < lineCount; i++) {
                 List<City> cities = new ArrayList<>();
 
                 for (int j = 0; j < i; j++) {
@@ -47,14 +47,14 @@ public class TestData {
                 Long bestAntTime = null;
 
                 for (int j = 0; j < results.size(); j++) {
-                    Long getI = results.get(j);
+                    Long getJ = results.get(j);
                     if (j % 2 == 1) {
-                        if (getI < bestAnt) {
-                            bestAnt = getI;
+                        if (getJ < bestAnt) {
+                            bestAnt = getJ;
                             bestAntIndex = (j - 1) / 2;
                         }
                     } else {
-                        bestAntTime = getI;
+                        bestAntTime = getJ;
                     }
                 }
 
@@ -73,10 +73,20 @@ public class TestData {
             dijOutput.write("NumCities,TotalDistance,TimeMs\r\n");
             dijOutput.flush();
 
-            for (int i = 2; i < 10000 + 1; i++) {
+            BufferedReader dijInput = new BufferedReader(new FileReader("Cities.csv"));
+
+            String line;
+            int lineCount = 0;
+            while ((line = dijInput.readLine()) != null) {
+                String[] tokens = line.split(",");
+                totalCities.add(new City(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1])));
+                lineCount++;
+            }
+
+            for (int i = 2; i < lineCount; i++) {
                 List<City> cities = new ArrayList<>();
                 for (int j = 0; j < i; j++) {
-                    cities.add(new City(rand.nextInt(0, 10000), rand.nextInt(0, 10000)));
+                    cities.add(totalCities.get(j));
                 }
 
                 City start = cities.getFirst();
