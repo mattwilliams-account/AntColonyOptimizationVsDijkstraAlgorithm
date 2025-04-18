@@ -10,7 +10,6 @@ public class TestData {
         if (args.length == 3) {
             dijkstra = args[2] != null && args[2].equals("-d");
         }
-        Random rand = new Random();
 
         // Ant Colony Optimization
 
@@ -90,7 +89,7 @@ public class TestData {
                 }
 
                 City start = cities.getFirst();
-                City end = cities.get(rand.nextInt(1, cities.size()));
+                City end = cities.getLast();
 
                 long startTime;
                 long endTime;
